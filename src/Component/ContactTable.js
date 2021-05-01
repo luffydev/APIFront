@@ -19,10 +19,14 @@ import WhatshappDialog from './Dialogs'
 import Contact from './../API/Contact'
 import StarBorder from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
+import Slide from '@material-ui/core/Slide';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
+function slideTransition(props) {
+  return <Slide {...props} direction="up" />;
+}
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -190,12 +194,6 @@ export default function ContactTable(props) {
 
                 }
 
-                
-
-                <FormControlLabel
-                  control={<Checkbox key={index} icon={<StarBorder style={{fill: "#f1f100"}} />} checkedIcon={<StarIcon style={{fill: "#f1f100"}} />}
-                            checked={ favoriteIconIsChecked[row.id] } onClick={() => toggleFavorite(row, index)}  />}
-                />
 
                 { loaders[row.id] &&
                   <CircularProgress
@@ -210,6 +208,14 @@ export default function ContactTable(props) {
                     style={{marginLeft:16, marginRight:16}}
                   />
                 }
+                
+
+                <FormControlLabel
+                  control={<Checkbox key={index} icon={<StarBorder style={{fill: "#f1f100"}} />} checkedIcon={<StarIcon style={{fill: "#f1f100"}} />}
+                            checked={ favoriteIconIsChecked[row.id] } onClick={() => toggleFavorite(row, index)}  />}
+                />
+
+                
 
                 
 				
@@ -219,7 +225,7 @@ export default function ContactTable(props) {
             </TableRow>
           ))}
 
-          <Snackbar open={displaySuccess} autoHideDuration={6000}>
+          <Snackbar open={displaySuccess} autoHideDuration={3000} TransiTransitionComponent={slideTransition}>
             <Alert severity="success">
                 { SnackbarMessage }
             </Alert>
