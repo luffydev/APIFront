@@ -12,9 +12,22 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import WhatsAppIcon from '@material-ui/icons/WhatsApp';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import WhatshappDialog from './Dialogs'
 import Contact from './../API/Contact'
+import StarBorder from '@material-ui/icons/StarBorder';
+import StarIcon from '@material-ui/icons/Star';
+
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 
 const useStyles = makeStyles({
   table: {
@@ -36,17 +49,63 @@ export default function ContactTable(props) {
   let lArray = props.contactList.data;
   const [loaders, setDisplayLoader] = React.useState({});
   const [whatsappIconDisplay, setWhatsappIconDisplay] = React.useState({});
+  const [favoriteIconIsChecked, setFavoriteIconIsChecked] = React.useState({});
   const [displayModal, setDisplayModal] = React.useState(false);
   const [modalNameSubname, setModalNameSubname] = React.useState("");
   const [modalData, setModalData] = React.useState({});
   const [modalError, setModalError] = React.useState(false);
+  const [displaySuccess, setDisplaySuccess] = React.useState(false);
+  const [SnackbarMessage, setSnabarMessage] = React.useState("");
+
+  lArray.map((pRow) => {
+    favoriteIconIsChecked[pRow.id] = pRow.is_favorite;
+    return true;
+  });
+
+  const toggleFavorite = (pRow) => {
+    
+    var lFrom = props.from;
+    var lContact = new Contact();
+
+    var lValue = false;
+
+    if(!pRow.is_favorite)
+    {
+        lValue = true;
+        pRow.is_favorite = true;
+        setSnabarMessage("Contact ajouté aux favoris !");
+
+    }else
+    {
+        lValue = false;
+        pRow.is_favorite = false;
+        setSnabarMessage("Contact retiré des favoris !");
+    }
+
+    if(favoriteIconIsChecked[pRow.id])
+    {
+      setFavoriteIconIsChecked(prevDisplayed => ({
+        ...prevDisplayed,
+        [pRow.id]: false
+      }));
+    }else
+    {
+      setFavoriteIconIsChecked(prevDisplayed => ({
+        ...prevDisplayed,
+        [pRow.id]: true
+      }));
+    }    
+
+    setDisplaySuccess(true);
+
+    setTimeout(() => { setDisplaySuccess(false); }, 3000)
+    lContact.toggleToFavorite(pRow.id, lFrom, lValue);
+  }
 
   const checkWhatsApp = pRow => {
 
     if(global.onLoading)
       return;
-
-    var from = props.from;
 
     var lContact = new Contact();
     global.onLoading = true;
@@ -62,9 +121,7 @@ export default function ContactTable(props) {
       [pRow.id]: true
     }));
 
-    console.log(from);
-
-    lContact.getWhatsAppStatus(pRow.num, from).then(pData => {
+    lContact.getWhatsAppStatus(pRow.num).then(pData => {
 
       if(!('success' in pData) || !pData.success )
       {
@@ -97,7 +154,7 @@ export default function ContactTable(props) {
 
   
   return (
-    <TableContainer component={Paper} style={{width:1300, marginLeft:150}}>
+    <TableContainer component={Paper} style={{width:900, margin:"0 auto"}}>
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -109,7 +166,7 @@ export default function ContactTable(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {lArray.map((row) => (
+          {lArray.map((row, index) => (
             <TableRow key={row.id}>
              
               <TableCell align="center">
@@ -125,9 +182,7 @@ export default function ContactTable(props) {
                   <FacebookIcon />
                 </IconButton>
 
-                {console.log((!(row.id in whatsappIconDisplay) || whatsappIconDisplay[row.id] == true))}
-
-                { (!(row.id in whatsappIconDisplay) || whatsappIconDisplay[row.id] == true) &&
+                { (!(row.id in whatsappIconDisplay) || whatsappIconDisplay[row.id] === true) &&
 
                   <IconButton aria-label="Whats App" component="span">
                     <WhatsAppIcon style={{fill: "green"}} onClick={() => checkWhatsApp(row) } />
@@ -135,7 +190,12 @@ export default function ContactTable(props) {
 
                 }
 
-               
+                
+
+                <FormControlLabel
+                  control={<Checkbox key={index} icon={<StarBorder style={{fill: "#f1f100"}} />} checkedIcon={<StarIcon style={{fill: "#f1f100"}} />}
+                            checked={ favoriteIconIsChecked[row.id] } onClick={() => toggleFavorite(row, index)}  />}
+                />
 
                 { loaders[row.id] &&
                   <CircularProgress
@@ -158,6 +218,12 @@ export default function ContactTable(props) {
 
             </TableRow>
           ))}
+
+          <Snackbar open={displaySuccess} autoHideDuration={6000}>
+            <Alert severity="success">
+                { SnackbarMessage }
+            </Alert>
+          </Snackbar>
 
           <WhatshappDialog displayModal={displayModal} modalNameSubname={modalNameSubname} modalData={modalData} modalError={modalError}></WhatshappDialog>
         </TableBody>

@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { createStyles, makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -20,32 +20,22 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Star from '@material-ui/icons/Star';
-import StarBorder from '@material-ui/icons/StarBorder';
-import { grey } from '@material-ui/core/colors';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
-import ContactList from './ContactList';
 import ContactTable from './ContactTable';
 
 import Contact from './../API/Contact'
 import Event from './../API/Event'
 
+import {
+  IconFlagFR,
+  IconFlagES,
+  IconFlagUK
+} from 'material-ui-flags';
+
 const drawerWidth = 240;
 var lFieldsData = {name : null, subName : null, type : 0, number : null , from : null};
 var lEventHandler = new Event();
-
-const GreenCheckbox = withStyles({
-  root: {
-    color: grey[400],
-    '&$checked': {
-      color: grey[600],
-    },
-  },
-  checked: {},
-})((props) => <Checkbox color="default" {...props} />);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -133,8 +123,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard(props) {
 
-  global.test = "test";
-  
   const lContact = new Contact();
 
   const classes = useStyles();
@@ -185,7 +173,7 @@ export default function Dashboard(props) {
         setFromHasError(true);
       }
 
-      if(lFieldsData.type == 1)
+      if(lFieldsData.type === 1)
       {
         if(!lFieldsData.name)
         {
@@ -205,8 +193,6 @@ export default function Dashboard(props) {
 
   lEventHandler.listenEvent('showData', function(pData)
   {
-      console.log('test');
-
       if(!pData || pData.success === false)
       {
         setEmptyResult(true);
@@ -259,26 +245,38 @@ export default function Dashboard(props) {
           getByNameAndSubname(lFieldsData.name, lFieldsData.subName, lFieldsData.from);
         break;
 
-        // Search by name
-        case 2:
-          getByName(lFieldsData.name, lFieldsData.from);
-        break;
-
         //Search by number
         case 3:
           getByNumber(lFieldsData.name, lFieldsData.from);
         break;
+
+        // Search by name
+        case 2:
+        default:
+          getByName(lFieldsData.name, lFieldsData.from);
+        break;
       }
       
   };
+
+  const onLoadFavorite = (pFrom) => {
+
+    showLoader(true);
+    showContactListContainer(false);
+
+    lFieldsData.from = pFrom;
+
+    lContact.loadFavorite(pFrom).then( pData => {
+      lEventHandler.triggerEvent('showData', pData);
+    });
+    
+  }
   
 
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
-  const [setAge] = React.useState('');
-
+  
   const handleNameChange = (event) => {
     lFieldsData.name = event.target.value;
   }
@@ -291,9 +289,7 @@ export default function Dashboard(props) {
 
     lFieldsData.type = event.target.value;
 
-    console.log(event.target.value);
-
-    if(lFieldsData.type == 1)
+    if(lFieldsData.type === 1)
     {
       setSearchbarWidth(200);
       setSelectorWidth(200);
@@ -428,11 +424,44 @@ export default function Dashboard(props) {
               >
                 Rechercher
               </Button>
-        </form>
+        </form>   
+        </Container>
 
-        
-         
-          
+        <Container maxWidth="lg" style={{ marginBottom:50 }}>
+          <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  className={classes.button}
+                  startIcon={<IconFlagFR />}
+                  onClick={ e => onLoadFavorite("france") }
+                >
+                  Favoris FR
+          </Button>
+
+          <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  className={classes.button}
+                  startIcon={<IconFlagES />}
+                  onClick={ e => onLoadFavorite("spain") }
+                  style={{marginLeft:10, marginRight:10}}
+                >
+                  Favoris ES
+          </Button>
+
+          <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  className={classes.button}
+                  startIcon={<IconFlagUK />}
+                  onClick={ e => onLoadFavorite("uk") }
+                >
+                  Favoris UK
+          </Button>
+
         </Container>
 
         

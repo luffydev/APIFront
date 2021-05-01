@@ -5,9 +5,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -15,10 +12,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import { red } from '@material-ui/core/colors';
-
-import ImageIcon from '@material-ui/icons/Image';
-import WorkIcon from '@material-ui/icons/Work';
-import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 
 import Slide from '@material-ui/core/Slide';
 
@@ -45,15 +38,12 @@ export default function WhatshappDialog(props) {
     var lData = props.modalData;
     var lError = props.modalError;
 
-    if(props.displayModal && global.modalDisplayed == false)
+    if(props.displayModal && global.modalDisplayed === false)
     {
         global.modalDisplayed = true;
         setOpen(true);
     }
 
-    const handleClickOpen = () => {
-      setOpen(true);
-    };
     const handleClose = () => {
       setOpen(false);
     };

@@ -3,10 +3,6 @@ class Event
 {
     mEventList = {};
 
-    constructor()
-    {
-    }
-
     listenEvent(pID, pCallback)
     {
         if(!(pID in this.mEventList))

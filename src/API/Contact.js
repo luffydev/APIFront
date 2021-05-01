@@ -1,11 +1,7 @@
-import CONFIG from './../config'
 import Net from './Net'
 
 
 class Contact {
-    
-    constructor(){
-    }
 
     getContactByName(pName, pFrom){
         
@@ -55,16 +51,44 @@ class Contact {
         return lPromise;
     }
 
-    getWhatsAppStatus(pNumber, pFrom){
+    getWhatsAppStatus(pNumber){
         
         var lNet = new Net();
-        var lData = {numero : pNumber, from : pFrom};
+        var lData = {numero : pNumber};
 
         const lPromise = new Promise((pResolve, pReject) => {
             lNet.postData('getWhatsAppStatus', lData).then(pResponse => {
                 pResolve(pResponse.data);
             }).catch(pError => {
                 pResolve({success : false});
+            });
+        });
+
+        return lPromise;
+    }
+
+    toggleToFavorite(pID, pFrom, pValue){
+        var lNet = new Net();
+        var lData = {'id' : pID, 'from' : pFrom, 'value' : pValue};
+
+        const lPromise = new Promise((pResolve, pReject) => {
+            lNet.postData('setFavorite', lData).then(pResponse => {
+                pResolve(pResponse.data);
+            }).catch(pError => {
+                pResolve({success : false});
+            });
+        });
+
+        return lPromise;
+    }
+
+    loadFavorite(pFrom) {
+        var lNet = new Net();
+        var lData = {'from' : pFrom};
+
+        const lPromise = new Promise((pResolve, pReject) => {
+            lNet.postData('loadFavorite', lData).then((pResponse) => {
+                pResolve(pResponse.data);
             });
         });
 
