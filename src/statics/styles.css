@@ -1,0 +1,10 @@
+.loader span {
+    transition: 500ms all ease;
+    opacity: 0;
+    will-change: opacity;
+    font-family: 'Antonio', sans-serif;
+  }
+
+.loader span.show {
+    opacity: 1;
+}
