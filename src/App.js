@@ -41,7 +41,7 @@ class App extends Component {
     };
 
     this.startHeartBeat = () => {
-      window.Scheduler.addTask('heartbeat', lPtr.heartbeat, 5000);
+      window.Scheduler.addTask('heartbeat', lPtr.heartbeat, 300000);
     }
 
     this.stopHeartBeat = () => {
@@ -70,7 +70,7 @@ class App extends Component {
         if(!pData.success)
         {
           this.session.removeSession();
-          
+
           lPtr.setState({showLogin: true});
           lPtr.payload = pData.payload;
           
