@@ -41,7 +41,7 @@ class Session {
     }
 
     removeSession(){
-        Cookies.remove('credentials');
+        Cookies.set('credentials', "", {expires: 0, path: ''});
     }
 
     checkCredential(pUsername, pPassword, pPayload){
