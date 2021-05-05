@@ -35,6 +35,22 @@ class Contact {
         return lPromise;
     }
 
+    getContactByID(pID, pFrom){
+        
+        var lNet = new Net();
+        var lData = { 'id' : pID, 'from' : pFrom };
+
+        const lPromise = new Promise((pResolve, pReject) => {
+            lNet.postData('getByID', lData).then(pResponse => {
+                    pResolve(pResponse.data);
+            }).catch(pError => {
+                pResolve({success : false});
+            });
+        })
+        
+        return lPromise;
+    }
+
     getContactByNameAndSubname(pName, pSubname, pFrom){
         
         var lNet = new Net();

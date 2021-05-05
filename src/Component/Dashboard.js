@@ -188,6 +188,15 @@ export default function Dashboard(props) {
         }
       }
 
+      if(lFieldsData.type === 4)
+      {
+        if(isNaN(parseInt(lFieldsData.name, 10)))
+        {
+          hasError = true;
+          setNameHasError(true);
+        }
+      }
+
       return hasError;
   };
 
@@ -228,6 +237,14 @@ export default function Dashboard(props) {
     });
   }
 
+  const getByID = (pID, pFrom) => {
+   
+    lContact.getContactByID(pID, pFrom).then( pData => {
+      lEventHandler.triggerEvent('showData', pData);
+    });
+
+  }
+
   const onButtonClick = () => {
 
       if(checkForm())
@@ -236,7 +253,7 @@ export default function Dashboard(props) {
       setEmptyResult(false);
       showLoader(true);
       showContactListContainer(false);
-    
+
       switch(lFieldsData.type)
       {
 
@@ -248,6 +265,11 @@ export default function Dashboard(props) {
         //Search by number
         case 3:
           getByNumber(lFieldsData.name, lFieldsData.from);
+        break;
+
+        //Search by id
+        case 4:
+          getByID(lFieldsData.name, lFieldsData.from);
         break;
 
         // Search by name
@@ -396,6 +418,7 @@ export default function Dashboard(props) {
                     <MenuItem value={1}>Nom & Prénom</MenuItem>
                     <MenuItem value={2}>Nom</MenuItem>
                     <MenuItem value={3}>Téléphone</MenuItem>
+                    <MenuItem value={4}>FB ID</MenuItem>
                   </Select>
               </FormControl>
 
