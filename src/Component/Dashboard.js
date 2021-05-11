@@ -30,7 +30,8 @@ import Event from './../API/Event'
 import {
   IconFlagFR,
   IconFlagES,
-  IconFlagUK
+  IconFlagUK,
+  IconFlagUS
 } from 'material-ui-flags';
 
 const drawerWidth = 240;
@@ -344,6 +345,10 @@ export default function Dashboard(props) {
         lFieldsData.from = 'uk';
       break;
 
+      case 4:
+        lFieldsData.from = 'usa';
+      break;
+
       case 1:
       default:
         lFieldsData.from = 'france';
@@ -435,6 +440,7 @@ export default function Dashboard(props) {
                     <MenuItem value={1}>France</MenuItem>
                     <MenuItem value={2}>Espagne</MenuItem>
                     <MenuItem value={3}>Angleterre</MenuItem>
+                    <MenuItem value={4}>USA</MenuItem>
                   </Select>
               </FormControl>
               
@@ -484,6 +490,18 @@ export default function Dashboard(props) {
                   onClick={ e => onLoadFavorite("uk") }
                 >
                   Favoris UK
+          </Button>
+
+          <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  className={classes.button}
+                  startIcon={<IconFlagUS />}
+                  onClick={ e => onLoadFavorite("usa") }
+                  style={{marginLeft:10, marginRight:10}}
+                >
+                  Favoris USA
           </Button>
 
         </Container>
