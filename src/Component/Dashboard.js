@@ -31,7 +31,9 @@ import {
   IconFlagFR,
   IconFlagES,
   IconFlagUK,
-  IconFlagUS
+  IconFlagUS,
+  IconFlagCN,
+  IconFlagEU
 } from 'material-ui-flags';
 
 const drawerWidth = 240;
@@ -349,6 +351,14 @@ export default function Dashboard(props) {
         lFieldsData.from = 'usa';
       break;
 
+      case 5:
+        lFieldsData.from = 'china';
+      break;
+
+      case 6:
+        lFieldsData.from = 'suisse';
+      break;
+
       case 1:
       default:
         lFieldsData.from = 'france';
@@ -441,6 +451,8 @@ export default function Dashboard(props) {
                     <MenuItem value={2}>Espagne</MenuItem>
                     <MenuItem value={3}>Angleterre</MenuItem>
                     <MenuItem value={4}>USA</MenuItem>
+                    <MenuItem value={5}>Hong Kong</MenuItem>
+                    <MenuItem value={6}>Suisse</MenuItem>
                   </Select>
               </FormControl>
               
@@ -502,6 +514,30 @@ export default function Dashboard(props) {
                   style={{marginLeft:10, marginRight:10}}
                 >
                   Favoris USA
+          </Button>
+
+          <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  className={classes.button}
+                  startIcon={<IconFlagCN />}
+                  onClick={ e => onLoadFavorite("china") }
+                  style={{marginLeft:10, marginRight:10}}
+                >
+                  Favoris Chine
+          </Button>
+
+          <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  className={classes.button}
+                  startIcon={<IconFlagEU />}
+                  onClick={ e => onLoadFavorite("suisse") }
+                  style={{marginLeft:10, marginRight:10}}
+                >
+                  Favoris Suisse
           </Button>
 
         </Container>
